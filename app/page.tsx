@@ -3,14 +3,26 @@
 import { useEffect, useState } from 'react';
 import ListingCard from '@/components/ListingCard';
 
+type Listing = {
+  id: string;
+  title: string;
+  price: string;
+  image: string;
+  source: 'ebay' | 'reverb';
+  url: string;
+};
+
 export default function Home() {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetch('/api/listings')
-      .then(r => r.json())
-      .then(d => { setItems(d.items || []); setLoading(false); })
+      .then((r) => r.json())
+      .then((d: { items?: Listing[] }) => {
+        setItems(d.items || []);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, []);
 
@@ -27,7 +39,9 @@ export default function Home() {
 
       {!loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {items.map((it) => <ListingCard key={it.id} item={it} />)}
+          {items.map((it) => (
+            <ListingCard key={`${it.source}-${it.id}`} item={it} />
+          ))}
         </div>
       )}
     </main>
