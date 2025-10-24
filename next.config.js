@@ -1,16 +1,28 @@
-/** @type {import("next").NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Cloudflare Pages + next-on-pages: use the origin image (no Node "sharp")
-    unoptimized: true,
-    // Allow common marketplaces now; add more as you expand
+    unoptimized: true, // Cloudflare doesn't support Next's sharp optimizer
     remotePatterns: [
-      { protocol: "https", hostname: "images.reverb.com" },
-      { protocol: "https", hostname: "img.revimage.com" },
-      { protocol: "https", hostname: "i.ebayimg.com" },
-      // keep localhost for dev fallback
-      { protocol: "http", hostname: "localhost" },
-      { protocol: "https", hostname: "localhost" }
+      {
+        protocol: "https",
+        hostname: "images.reverb.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.revimage.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.ebayimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "media.reverb.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.ebaystatic.com",
+      },
     ],
   },
   eslint: { ignoreDuringBuilds: true },
