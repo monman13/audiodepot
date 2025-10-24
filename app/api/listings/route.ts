@@ -1,12 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// ✅ Required by Cloudflare Pages (next-on-pages)
+// Required by Cloudflare Pages (next-on-pages)
 export const runtime = 'edge';
 
 const GBP = (n: number) =>
   new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(n);
 
-async function fetchReverb(query: string, perPage = 24) {
+/** ----- Types from Reverb (minimal fields we use) ----- */
+type ReverbPrice = { amount?: string | number | null };
+type ReverbPhoto = { _links?: { thumbnail?: { href?: string } } };
+type ReverbLinks = { web?: { href?: string } };
+type ReverbListing = {
+  id: string | number;
+  title: string;
+  price?: ReverbPrice;
+  photos?: ReverbPhoto[];
+  _links?: ReverbLinks;
+};
+
+type ReverbSearchResponse = {
+  listings?: ReverbListing[];
+};
+
+/** ----- Our normalized listing type ----- */
+export type Listing = {
+  id: string;
+  title: string;
+  price: string;        // "£239.00"
+  priceNumber?: number; // 239
+  image: string;
+  source: 'reverb';
+  url: string;
+};
+
+function toNumber(value: unknown): number | undefined {
+  if (value == null) return undefined;
+  const n = typeof value === 'string' ? Number(value) : (value as number);
+  return Number.isFinite(n) ? (n as number) : undefined;
+}
+
+async function fetchReverb(query: string, perPage = 24): Promise<Listing[]> {
   const token = process.env.REVERB_TOKEN;
   const headers: Record<string, string> = { Accept: 'application/hal+json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -15,23 +48,28 @@ async function fetchReverb(query: string, perPage = 24) {
     query
   )}&ships_to=GB&per_page=${perPage}`;
 
-  try {
-    const res = await fetch(url, { headers }); // Edge-safe
-    if (!res.ok) return [];
-    const data = await res.json();
-    const items = data?.listings || [];
-    return items.map((it: any) => ({
+  const res = await fetch(url, { headers });
+  if (!res.ok) return [];
+
+  const data = (await res.json()) as ReverbSearchResponse;
+  const arr = data.listings ?? [];
+
+  return arr.map<Listing>((it) => {
+    const amount = toNumber(it.price?.amount);
+    const thumb =
+      it.photos?.[0]?._links?.thumbnail?.href ??
+      '/placeholder.png';
+    const web = it._links?.web?.href ?? '#';
+    return {
       id: String(it.id),
       title: it.title,
-      priceNumber: it.price?.amount ? Number(it.price.amount) : undefined,
-      price: it.price?.amount ? GBP(Number(it.price.amount)) : '—',
-      image: it.photos?.[0]?.['_links']?.thumbnail?.href || '/placeholder.png',
-      source: 'reverb' as const,
-      url: it['_links']?.web?.href || '#',
-    }));
-  } catch {
-    return [];
-  }
+      priceNumber: amount,
+      price: typeof amount === 'number' ? GBP(amount) : '—',
+      image: thumb,
+      source: 'reverb',
+      url: web,
+    };
+  });
 }
 
 export async function GET(req: NextRequest) {
@@ -42,16 +80,18 @@ export async function GET(req: NextRequest) {
 
   let items = await fetchReverb(q);
 
-  if (maxPrice && !Number.isNaN(maxPrice)) {
-    items = items.filter((x: any) => typeof x.priceNumber === 'number' && x.priceNumber <= maxPrice);
+  if (typeof maxPrice === 'number' && Number.isFinite(maxPrice)) {
+    items = items.filter((x) => (x.priceNumber ?? Infinity) <= maxPrice);
   }
 
+  // Fallback demo items if API returns nothing
   if (items.length === 0) {
     items = [
       {
         id: 'demo1',
         title: 'Roland SP-404SX (Demo)',
         price: GBP(239),
+        priceNumber: 239,
         image: 'https://placehold.co/600x400?text=SP-404',
         source: 'reverb',
         url: '#',
@@ -60,14 +100,16 @@ export async function GET(req: NextRequest) {
         id: 'demo2',
         title: 'Akai MPC 1000 (Demo)',
         price: GBP(299),
+        priceNumber: 299,
         image: 'https://placehold.co/600x400?text=MPC1000',
-        source: 'ebay',
+        source: 'reverb',
         url: '#',
       },
-    ] as any;
+    ];
   }
 
-  const publicItems = items.map(({ priceNumber, ...rest }: any) => rest);
+  // Don’t expose priceNumber publicly (not needed by UI)
+  const publicItems = items.map(({ priceNumber, ...rest }) => rest);
 
   return NextResponse.json(
     { items: publicItems },
