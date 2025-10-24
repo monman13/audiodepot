@@ -1,26 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ListingCard from '@/components/ListingCard';
-
-type Listing = {
-  id: string;
-  title: string;
-  price: string;
-  image: string;
-  source: 'ebay' | 'reverb';
-  url: string;
-};
+import ListingCard, { Listing } from '@/components/ListingCard';
 
 export default function Home() {
   const [items, setItems] = useState<Listing[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/listings')
       .then((r) => r.json())
       .then((d: { items?: Listing[] }) => {
-        setItems(d.items || []);
+        setItems(d.items ?? []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
