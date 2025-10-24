@@ -1,39 +1,37 @@
 import "./globals.css";
 
+export const runtime = "edge";
+
 export const metadata = {
   title: "AudioDepot UK — Used Samplers & Synths",
-  description: "Live deals from UK sellers. GBP prices. Updated automatically.",
+  description: "Live deals from UK sellers. Updated automatically.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="antialiased">
-
-        {/* Header */}
-        <header className="sticky top-0 z-40 border-b border-white/5 backdrop-blur bg-black/20">
-          <div className="mx-auto w-full max-w-6xl px-4 py-4 flex items-center justify-between">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              <span className="text-white">Audio</span>
-              <span className="text-[var(--accent)]">Depot</span> UK
-            </h1>
-            <span className="badge">UK Marketplace</span>
+      <body className="os-desktop">
+        {/* Top “system” bar */}
+        <div className="pixel-topbar">
+          <div className="mx-auto max-w-7xl px-4 py-2 flex items-center gap-3 text-[12px] text-white">
+            <span className="font-extrabold tracking-wide">AUDIODEPOT</span>
+            <span className="opacity-80">Pixel OS</span>
           </div>
-        </header>
+        </div>
 
-        {/* Body */}
-        <main className="mx-auto w-full max-w-6xl px-4 py-10">
+        {/* Desktop area */}
+        <main className="mx-auto max-w-7xl px-4 pt-6 pb-24">
           {children}
         </main>
 
-        {/* Footer */}
-        <footer className="mt-12 border-t border-white/5 text-sm text-[var(--muted)]">
-          <div className="mx-auto w-full max-w-6xl px-4 py-8 flex justify-between">
-            <p>© {new Date().getFullYear()} AudioDepot UK</p>
-            <p>Live marketplace aggregator</p>
+        {/* Taskbar */}
+        <div className="pixel-taskbar">
+          <div className="mx-auto max-w-7xl px-3 py-2 flex items-center gap-2 text-[11px]">
+            <button className="pixel-btn">Start</button>
+            <div className="pixel-chip">Cart: 0</div>
+            <div className="ml-auto pixel-chip">12:00</div>
           </div>
-        </footer>
-
+        </div>
       </body>
     </html>
   );

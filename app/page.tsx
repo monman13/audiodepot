@@ -1,53 +1,47 @@
 import ListingCard, { type Listing } from "@/components/ListingCard";
+import OsWindow from "@/components/OsWindow";
 
-/** Force runtime rendering so Next doesn’t pre-render and hit undefined/api/listings */
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 export default async function Home() {
-  // Relative fetch + no-store ensures this runs at request time on Cloudflare
   const res = await fetch("/api/listings", { cache: "no-store" });
+
   if (!res.ok) {
-    // fail-safe: show an empty list if API ever hiccups
     return (
-      <main className="mx-auto max-w-7xl px-6 pb-16 pt-10">
+      <OsWindow title="My Computer — AudioDepot" statusLeft="Offline" statusRight="ENG 12:00">
         <Header />
         <EmptyState />
-      </main>
+      </OsWindow>
     );
   }
 
-  const listings: Listing[] = await res.json();
+  const data = (await res.json()) as { items: Listing[] };
+  const items = data.items ?? [];
 
   return (
-    <main className="mx-auto max-w-7xl px-6 pb-16 pt-10">
+    <OsWindow title="My Computer — AudioDepot" statusLeft={`Listings: ${items.length}`} statusRight="ENG 12:00">
       <Header />
-      <section className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {listings.map((item) => (
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4">
+        {items.map((item) => (
           <ListingCard key={item.id} item={item} />
         ))}
-      </section>
-    </main>
+      </div>
+    </OsWindow>
   );
 }
 
 function Header() {
   return (
-    <header className="flex items-baseline justify-between">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-[var(--text)]">
-          AudioDepot UK — Used Samplers & Synths
-        </h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">
-          Live deals from UK sellers · GBP prices · Updated automatically
-        </p>
-      </div>
+    <header className="flex items-center justify-between osw-toolbar">
+      <h1 className="text-lg font-extrabold tracking-tight">AudioDepot</h1>
       <a
-        href="https://reverb.com/uk"
+        href="https://reverb.com"
         target="_blank"
         rel="noreferrer"
-        className="btn"
+        className="pixel-btn"
       >
         Browse on Reverb
       </a>
@@ -57,8 +51,8 @@ function Header() {
 
 function EmptyState() {
   return (
-    <div className="card mt-8 p-8 text-[var(--muted)]">
-      Couldn’t load listings right now. Please refresh in a moment.
+    <div className="card mt-6 p-8 text-[var(--px-ink-soft)]">
+      Couldn’t load listings. Try again soon.
     </div>
   );
 }
