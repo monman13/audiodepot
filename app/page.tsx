@@ -1,40 +1,39 @@
-'use client';
+import ListingCard from "@/components/ListingCard";
+import SkeletonCard from "@/components/SkeletonCard";
 
-import { useEffect, useState } from 'react';
-import ListingCard, { Listing } from '@/components/ListingCard';
+async function getListings() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/listings`, {
+    next: { revalidate: 60 },
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
 
-export default function Home() {
-  const [items, setItems] = useState<Listing[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/listings')
-      .then((r) => r.json())
-      .then((d: { items?: Listing[] }) => {
-        setItems(d.items ?? []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+export default async function Home() {
+  const listings = await getListings();
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold">AudioDepot UK — Used Samplers & Synths</h1>
-        <p className="text-sm text-gray-600">
-          Live deals from UK sellers · GBP prices · Updated automatically
+    <>
+      <section className="mb-6">
+        <h2 className="text-3xl font-semibold tracking-tight">
+          Used Samplers & Synths
+        </h2>
+        <p className="mt-2 text-sm text-[var(--muted)]">
+          Live deals · Updated automatically
         </p>
-      </header>
+      </section>
 
-      {loading && <div>Loading latest deals…</div>}
-
-      {!loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {items.map((it) => (
-            <ListingCard key={`${it.source}-${it.id}`} item={it} />
+      {listings.length === 0 ? (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {listings.map((item: any) => (
+            <ListingCard key={item.id} item={item} />
           ))}
         </div>
       )}
-    </main>
+    </>
   );
 }
