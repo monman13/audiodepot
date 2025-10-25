@@ -2,73 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Boutique Analog Gear Store palette */
-:root{
-  --bg: #F8F6F1;            /* ivory paper */
-  --ink: #2F2A24;           /* deep brown text */
-  --muted: #746B63;         /* soft label */
-  --edge: #E7E2DA;          /* paper edge */
-  --panel: #FFFFFF;         /* card base */
-  --green: #0E3A2A;         /* hunter green */
-  --green-600:#145C43;
-  --accent:#F59E0B;         /* orange */
+/* BODY */
+body {
+  @apply bg-[#0b1a0f] text-[#e6e6e6] antialiased;
 }
 
-html, body {
-  height: 100%;
-  background: var(--bg);
-  color: var(--ink);
-  font-feature-settings: "liga" 1, "lnum" 1, "kern" 1;
+/* PAGE WRAPPER */
+.main-container {
+  @apply max-w-5xl mx-auto px-4 py-10;
 }
 
-/* Subtle paper texture feel via layered shadow */
-.card {
-  background: var(--panel);
-  border: 1px solid var(--edge);
-  border-radius: 16px;
-  box-shadow:
-    0 1px 0 rgba(20, 15, 10, 0.04),
-    0 8px 24px rgba(20, 15, 10, 0.06);
+/* HEADER TITLE */
+.site-title {
+  @apply text-3xl font-semibold tracking-tight text-[#e6e6e6];
 }
 
-/* Green top-bar header */
-.header-brand {
-  background: linear-gradient(180deg, var(--green), var(--green-600));
-  color: #F3F7F4;
+/* SUBTITLE TEXT */
+.sub-text {
+  @apply text-sm text-[#b5c2b5] mt-1;
 }
 
-/* Small classy pill */
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: .375rem;
-  height: 28px;
-  padding: 0 .6rem;
-  border-radius: 999px;
-  border: 1px solid var(--edge);
-  background: #FAF9F6;
-  color: var(--muted);
-  font-weight: 600;
-  letter-spacing: .02em;
+/* LISTING CARD */
+.listing-card {
+  @apply border border-[#233529] rounded-md bg-[#112116] hover:bg-[#162c20] transition p-4 flex justify-between items-center;
 }
 
-/* Soft link underline */
-.link-underline {
-  text-decoration: none;
-  background-image: linear-gradient(var(--ink), var(--ink));
-  background-size: 0 2px;
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  transition: background-size .25s ease;
+/* PRICE */
+.price {
+  @apply font-semibold text-[#e8ffe8];
 }
-.link-underline:hover { background-size: 100% 2px; }
 
-/* Image fallbacks */
-.thumb-fallback {
-  display: grid;
-  place-items: center;
-  background: #EFECE7;
-  color: #BAB2AA;
-  font-weight: 800;
-  letter-spacing: .04em;
+/* MARKETPLACE BADGE */
+.market-badge {
+  @apply px-2 py-1 border border-[#233529] text-xs rounded-md text-[#e6e6e6];
 }

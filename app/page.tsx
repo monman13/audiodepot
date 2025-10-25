@@ -7,7 +7,6 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  // Resolve base URL for both local and Netlify/Vercel
   const base =
     process.env.NEXT_PUBLIC_SITE_URL ||
     process.env.VERCEL_URL ||
@@ -18,12 +17,10 @@ export default async function Home() {
 
   if (!res.ok) {
     return (
-      <main className="max-w-6xl mx-auto px-4 py-8 sm:py-10">
-        <OsWindow title="My Computer — AudioDepot" statusLeft="Offline">
-          <Header />
-          <EmptyState />
-        </OsWindow>
-      </main>
+      <OsWindow title="AudioDepot" statusLeft="Offline" statusRight="">
+        <Header />
+        <EmptyState />
+      </OsWindow>
     );
   }
 
@@ -31,24 +28,21 @@ export default async function Home() {
   const items = data.items ?? [];
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-8 sm:py-10">
-      <OsWindow
-        title="My Computer — AudioDepot"
-        statusLeft={`Listings: ${items.length}`}
-        statusRight=""
-      >
-        <Header />
+    <OsWindow title="AudioDepot" statusLeft={`Listings: ${items.length}`} statusRight="">
+      <Header />
 
-        {items.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.map((it) => (
-              <ListingCard key={it.id} item={it} />
-            ))}
-          </div>
-        )}
-      </OsWindow>
-    </main>
+      <div className="main-container">
+        <h1 className="site-title">Live deals from UK sellers</h1>
+        <p className="sub-text">GBP prices • Updated automatically</p>
+
+        <div className="mt-8 space-y-4">
+          {items.length === 0 ? (
+            <EmptyState />
+          ) : (
+            items.map((item) => <ListingCard key={item.id} item={item} />)
+          )}
+        </div>
+      </div>
+    </OsWindow>
   );
 }
