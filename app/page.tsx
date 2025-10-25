@@ -7,7 +7,15 @@ export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 export default async function Home() {
-  const res = await fetch("/api/listings", { cache: "no-store" });
+ const baseUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.VERCEL_URL ||
+  process.env.URL ||
+  "http://localhost:3000";
+
+const res = await fetch(`${baseUrl}/api/listings`, {
+  cache: "no-store",
+});
 
   if (!res.ok) {
     return (
