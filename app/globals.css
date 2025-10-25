@@ -2,37 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-/* BODY */
-body {
-  @apply bg-[#0b1a0f] text-[#e6e6e6] antialiased;
+/* Color tokens (no @apply anywhere) */
+:root{
+  --bg: #0b1a0f;
+  --fg: #e6e6e6;
+  --fg-muted: #b5c2b5;
+  --card: #112116;
+  --card-hover: #162c20;
+  --border: #233529;
+  --price: #e8ffe8;
 }
 
-/* PAGE WRAPPER */
-.main-container {
-  @apply max-w-5xl mx-auto px-4 py-10;
-}
-
-/* HEADER TITLE */
-.site-title {
-  @apply text-3xl font-semibold tracking-tight text-[#e6e6e6];
-}
-
-/* SUBTITLE TEXT */
-.sub-text {
-  @apply text-sm text-[#b5c2b5] mt-1;
-}
-
-/* LISTING CARD */
-.listing-card {
-  @apply border border-[#233529] rounded-md bg-[#112116] hover:bg-[#162c20] transition p-4 flex justify-between items-center;
-}
-
-/* PRICE */
-.price {
-  @apply font-semibold text-[#e8ffe8];
-}
-
-/* MARKETPLACE BADGE */
-.market-badge {
-  @apply px-2 py-1 border border-[#233529] text-xs rounded-md text-[#e6e6e6];
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

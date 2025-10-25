@@ -28,18 +28,31 @@ export default async function Home() {
   const items = data.items ?? [];
 
   return (
-    <OsWindow title="AudioDepot" statusLeft={`Listings: ${items.length}`} statusRight="">
+    <OsWindow
+      title="AudioDepot"
+      statusLeft={`Listings: ${items.length}`}
+      statusRight=""
+    >
       <Header />
 
-      <div className="main-container">
-        <h1 className="site-title">Live deals from UK sellers</h1>
-        <p className="sub-text">GBP prices • Updated automatically</p>
+      <div className="max-w-5xl mx-auto px-4 py-10">
+        <h1 className="text-3xl font-semibold tracking-tight">Live deals from UK sellers</h1>
+        <p className="text-sm text-[var(--fg-muted)] mt-1">GBP prices · Updated automatically</p>
 
         <div className="mt-8 space-y-4">
           {items.length === 0 ? (
             <EmptyState />
           ) : (
-            items.map((item) => <ListingCard key={item.id} item={item} />)
+            items.map((item) => (
+              <div
+                key={item.id}
+                className="border border-[var(--border)] rounded-md bg-[var(--card)] hover:bg-[var(--card-hover)] transition"
+              >
+                <div className="p-4">
+                  <ListingCard item={item} />
+                </div>
+              </div>
+            ))
           )}
         </div>
       </div>
