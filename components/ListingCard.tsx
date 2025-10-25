@@ -1,6 +1,4 @@
 "use client";
-
-import Image from "next/image";
 import Link from "next/link";
 
 export type Listing = {
@@ -12,38 +10,24 @@ export type Listing = {
   url: string;
 };
 
-const SOURCE_LABELS = {
-  ebay: "eBay",
-  reverb: "Reverb",
-};
-
 export default function ListingCard({ item }: { item: Listing }) {
   return (
-    <article className="card group overflow-hidden">
-      <Link
-        href={item.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block p-4"
-      >
-        <div className="relative h-56 w-full overflow-hidden rounded-xl border border-white/5">
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            sizes="(max-width:768px) 100vw, 50vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-            unoptimized
-          />
-        </div>
+    <Link
+      href={item.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="card block"
+    >
+      <div className="w-full h-48 bg-[#222] rounded-md mb-3 flex items-center justify-center text-sm text-[#666]">
+        {item.title}
+      </div>
 
-        <div className="mt-4 flex items-center justify-between">
-          <h3 className="text-base font-medium line-clamp-2">{item.title}</h3>
-          <span className="badge">{SOURCE_LABELS[item.source]}</span>
-        </div>
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="text-base font-medium">{item.title}</h3>
+        <span className="btn">{item.source}</span>
+      </div>
 
-        <div className="mt-2 text-lg font-semibold">{item.price}</div>
-      </Link>
-    </article>
+      <div className="text-lg font-semibold mt-1">{item.price}</div>
+    </Link>
   );
 }
