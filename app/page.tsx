@@ -1,7 +1,7 @@
 import OsWindow from "../components/OsWindow";
 import ListingCard, { Listing } from "../components/ListingCard";
 import Header from "../components/Header";
-import EmptyState from "../components/EmptyState";
+import EmptyState from "../components/Emptystate";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
