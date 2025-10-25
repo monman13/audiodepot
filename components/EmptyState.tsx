@@ -1,8 +1,13 @@
-// components/EmptyState.tsx
 export default function EmptyState() {
   return (
-    <div className="rounded-lg border border-dashed p-6 text-center">
-      <p className="text-sm opacity-70">No listings right now. Check back soon.</p>
+    <div className="text-center py-16">
+      <div className="mx-auto w-16 h-16 rounded-full border border-[var(--edge)] grid place-items-center">
+        <span className="text-[var(--muted)] font-semibold">Ø</span>
+      </div>
+      <h3 className="mt-6 text-lg font-semibold">No listings (yet)</h3>
+      <p className="mt-2 text-[15px] text-[var(--muted)]">
+        We’ll pull fresh deals shortly. Check back in a moment.
+      </p>
     </div>
   );
 }

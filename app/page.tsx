@@ -7,6 +7,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  // Resolve base URL for both local and Netlify/Vercel
   const base =
     process.env.NEXT_PUBLIC_SITE_URL ||
     process.env.VERCEL_URL ||
@@ -17,14 +18,12 @@ export default async function Home() {
 
   if (!res.ok) {
     return (
-      <OsWindow
-        title="My Computer — AudioDepot"
-        statusLeft="Offline"
-        statusRight=""
-      >
-        <Header />
-        <EmptyState />
-      </OsWindow>
+      <main className="max-w-6xl mx-auto px-4 py-8 sm:py-10">
+        <OsWindow title="My Computer — AudioDepot" statusLeft="Offline">
+          <Header />
+          <EmptyState />
+        </OsWindow>
+      </main>
     );
   }
 
@@ -32,20 +31,24 @@ export default async function Home() {
   const items = data.items ?? [];
 
   return (
-    <OsWindow
-      title="My Computer — AudioDepot"
-      statusLeft={`Listings: ${items.length}`}
-      statusRight=""
-    >
-      <Header />
+    <main className="max-w-6xl mx-auto px-4 py-8 sm:py-10">
+      <OsWindow
+        title="My Computer — AudioDepot"
+        statusLeft={`Listings: ${items.length}`}
+        statusRight=""
+      >
+        <Header />
 
-      <div className="grid gap-6 py-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {items.map((item) => (
-          <ListingCard key={item.id} item={item} />
-        ))}
-      </div>
-
-      {items.length === 0 && <EmptyState />}
-    </OsWindow>
+        {items.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {items.map((it) => (
+              <ListingCard key={it.id} item={it} />
+            ))}
+          </div>
+        )}
+      </OsWindow>
+    </main>
   );
 }

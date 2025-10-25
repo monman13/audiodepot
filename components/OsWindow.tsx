@@ -1,57 +1,32 @@
 "use client";
 import React from "react";
-import clsx from "clsx";
 
 type Props = {
   title: string;
-  children: React.ReactNode;
-  menu?: string[];       // e.g. ["File", "Edit", "View", "Help"]
-  statusLeft?: string;   // e.g. "Ready"
-  statusRight?: string;  // e.g. "ENG 12:00"
-  className?: string;
+  statusLeft?: string;
+  statusRight?: string;
+  children?: React.ReactNode;
 };
 
-export default function OsWindow({
-  title,
-  children,
-  menu = ["File", "Edit", "View", "Help"],
-  statusLeft = "Ready",
-  statusRight = "ENG 12:00",
-  className,
-}: Props) {
+export default function OsWindow({ title, statusLeft = "", statusRight = "", children }: Props) {
   return (
-    <section className={clsx("osw-window", className)}>
-      {/* Titlebar */}
-      <div className="osw-titlebar">
-        <div className="osw-traffic">
-          <span className="osw-dot osw-dot-green" />
-          <span className="osw-dot osw-dot-yellow" />
-          <span className="osw-dot osw-dot-red" />
+    <section className="card">
+      {/* Title bar */}
+      <div className="header-brand rounded-t-[15px] px-5 py-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-[22px] leading-tight font-semibold tracking-[-0.01em]">
+            {title}
+          </h1>
+          <div className="flex items-center gap-2 text-[12px] opacity-90">
+            {statusLeft && <span className="pill bg-white/10 border-white/20 text-white/90">{statusLeft}</span>}
+            {statusRight && <span className="pill bg-white/10 border-white/20 text-white/90">{statusRight}</span>}
+          </div>
         </div>
-        <div className="osw-title" title={title}>{title}</div>
-        <div className="osw-controls">
-          <button className="osw-mini" aria-label="Minimize">_</button>
-          <button className="osw-mini" aria-label="Maximize">▭</button>
-          <button className="osw-mini" aria-label="Close">X</button>
-        </div>
-      </div>
-
-      {/* Menubar */}
-      <div className="osw-menubar">
-        {menu.map((m) => (
-          <button key={m} className="osw-menuitem">{m}</button>
-        ))}
       </div>
 
       {/* Content */}
-      <div className="osw-body">
+      <div className="p-6 sm:p-8">
         {children}
-      </div>
-
-      {/* Statusbar */}
-      <div className="osw-status">
-        <div className="osw-status-left">{statusLeft}</div>
-        <div className="osw-status-right">{statusRight}</div>
       </div>
     </section>
   );
